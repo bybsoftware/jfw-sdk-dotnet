@@ -1,6 +1,7 @@
 
 using JFW.Sdk.Clients.Implements;
 using JFW.Sdk.Clients.Interfaces;
+using JFW.Sdk.Constants;
 
 namespace JFW.Sdk;
 
@@ -9,16 +10,6 @@ namespace JFW.Sdk;
 /// </summary>
 public class JfwApiClient : IJfwApiClient
 {
-    /// <summary>
-    /// The authentication key header key.
-    /// </summary>
-    public const string AuthKeyHeaderKey = "Auth-Key";
-
-    /// <summary>
-    /// The brand URL header key.
-    /// </summary>
-    public const string BrandUrlHeaderKey = "Brand-Url";
-
     /// <inheritdoc/>
     public IUsersClient Users { get; }
 
@@ -67,10 +58,10 @@ public class JfwApiClient : IJfwApiClient
     {
         var headers = new Dictionary<string, string>();
         if (!string.IsNullOrEmpty(authKey))
-            headers.Add(AuthKeyHeaderKey, authKey);
+            headers.Add(HeaderKeys.AuthKey, authKey);
 
         if (!string.IsNullOrEmpty(brandUrl))
-            headers.Add(BrandUrlHeaderKey, brandUrl);
+            headers.Add(HeaderKeys.BrandUrl, brandUrl);
 
         return headers;
     }
@@ -87,9 +78,9 @@ public class JfwApiClient : IJfwApiClient
     /// <inheritdoc />
     public void UpdateAuthKey(string authKey)
     {
-        if (DefaultHeaders.ContainsKey(AuthKeyHeaderKey))
-            DefaultHeaders[AuthKeyHeaderKey] = authKey;
+        if (DefaultHeaders.ContainsKey(HeaderKeys.AuthKey))
+            DefaultHeaders[HeaderKeys.AuthKey] = authKey;
         else
-            DefaultHeaders.Add(AuthKeyHeaderKey, authKey);
+            DefaultHeaders.Add(HeaderKeys.AuthKey, authKey);
     }
 }

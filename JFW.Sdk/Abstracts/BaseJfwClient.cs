@@ -33,13 +33,13 @@ namespace JFW.Sdk.Abstracts
             if (string.IsNullOrEmpty(brandUrl)) throw new NullReferenceException(nameof(brandUrl));
             BrandUrl = brandUrl;
 
-            _httpClient.DefaultRequestHeaders.Add(nameof(BrandUrl), brandUrl);
+            _httpClient.DefaultRequestHeaders.Add(HeaderKeys.BrandUrl, brandUrl);
         }
 
         public BaseJFWClient(HttpClient httpClient, string brandUrl, string authKey) : this(httpClient, brandUrl)
         {
             AuthKey = authKey;
-            _httpClient.DefaultRequestHeaders.Add(nameof(AuthKey), authKey);
+            _httpClient.DefaultRequestHeaders.Add(HeaderKeys.AuthKey, authKey);
         }
 
 
