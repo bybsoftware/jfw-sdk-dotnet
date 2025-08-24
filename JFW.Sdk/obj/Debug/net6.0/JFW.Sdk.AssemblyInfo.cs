@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JFW.Sdk")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0dfe8055283b77e58d2210f01cadda93875cfb19")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+16c399e27951d16b00b59c12f7ea775e265c5c68")]
 [assembly: System.Reflection.AssemblyProductAttribute("JFW.Sdk")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JFW.Sdk")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

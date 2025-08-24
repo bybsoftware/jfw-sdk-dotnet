@@ -13,18 +13,13 @@ namespace JFW.Sdk.Models.Requests
     public class AuthenticationRequest
     {
         /// <summary>
-        /// The authentication key for the API.
+        /// The username of the user.
         /// </summary>
-        public string AuthKey { get; set; }
+        public string Username { get; set; } = null!;
 
         /// <summary>
-        /// The brand URL for the API.
+        /// The password of the user.
         /// </summary>
-        public string BrandUrl { get; set; }
-
-        /// <summary>
-        /// The public key of the brand.
-        /// </summary>
-        public string PublicKey { get; set; }
+        public string Password { get; set; } = null!;      
     }
 }
