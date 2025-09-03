@@ -22,6 +22,7 @@ public interface IManagementConnection
     /// <param name="contentType">The request content type. Defaults to <c>application/json</c>. Supports JSON and form-url-encoded.</param>
     /// <param name="headers">Optional per-request headers. These override or supplement default headers (e.g., Authorization).</param>
     /// <param name="converters">Optional custom JSON converters for deserialization.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The response deserialized into <typeparamref name="TResponse"/>. Returns <c>default</c> if empty or not parsable.</returns>
     Task<TResponse?> SendAsync<TRequest, TResponse>(
         HttpMethod method,
@@ -29,7 +30,9 @@ public interface IManagementConnection
         TRequest? body = default,
         string contentType = "application/json",
         IDictionary<string, string>? headers = null,
-        JsonConverter[]? converters = null);
+        JsonConverter[]? converters = null,
+        CancellationToken cancellationToken = default
+    );
 
     /// <summary>
     /// Sends an HTTP GET request.
@@ -38,8 +41,9 @@ public interface IManagementConnection
     /// <param name="url">The relative or absolute URL of the resource.</param>
     /// <param name="headers">Optional per-request headers.</param>
     /// <param name="converters">Optional custom JSON converters for deserialization.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The deserialized response body, or <c>default</c> if empty.</returns>
-    Task<T?> GetAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null);
+    Task<T?> GetAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sends an HTTP POST request with a request body.
@@ -50,8 +54,9 @@ public interface IManagementConnection
     /// <param name="headers">Optional per-request headers.</param>
     /// <param name="contentType">The content type for the request body. Defaults to <c>application/json</c>.</param>
     /// <param name="converters">Optional custom JSON converters for deserialization.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The deserialized response body, or <c>default</c> if empty.</returns>
-    Task<T?> PostAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = "application/json", JsonConverter[]? converters = null);
+    Task<T?> PostAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = "application/json", JsonConverter[]? converters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sends an HTTP PUT request with a request body, typically used for full resource replacement.
@@ -62,8 +67,9 @@ public interface IManagementConnection
     /// <param name="headers">Optional per-request headers.</param>
     /// <param name="contentType">The content type for the request body. Defaults to <c>application/json</c>.</param>
     /// <param name="converters">Optional custom JSON converters for deserialization.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The deserialized response body, or <c>default</c> if empty.</returns>
-    Task<T?> PutAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = "application/json", JsonConverter[]? converters = null);
+    Task<T?> PutAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = "application/json", JsonConverter[]? converters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sends an HTTP PATCH request with a request body, typically used for partial updates.
@@ -74,8 +80,9 @@ public interface IManagementConnection
     /// <param name="headers">Optional per-request headers.</param>
     /// <param name="contentType">The content type for the request body. Defaults to <c>application/json</c>.</param>
     /// <param name="converters">Optional custom JSON converters for deserialization.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The deserialized response body, or <c>default</c> if empty.</returns>
-    Task<T?> PatchAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = "application/json", JsonConverter[]? converters = null);
+    Task<T?> PatchAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = "application/json", JsonConverter[]? converters = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sends an HTTP DELETE request.
@@ -84,7 +91,8 @@ public interface IManagementConnection
     /// <param name="url">The relative or absolute URL of the resource.</param>
     /// <param name="headers">Optional per-request headers.</param>
     /// <param name="converters">Optional custom JSON converters for deserialization.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>The deserialized response body, or <c>default</c> if empty.</returns>
-    Task<T?> DeleteAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null);
+    Task<T?> DeleteAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null, CancellationToken cancellationToken = default);
 
 }

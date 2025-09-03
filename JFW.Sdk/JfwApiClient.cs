@@ -10,6 +10,10 @@ namespace JFW.Sdk;
 /// </summary>
 public class JfwApiClient : IJfwApiClient
 {
+
+    /// <inheritdoc/>
+    public IIssueCategoriesClient IssueCategories { get; }
+
     /// <inheritdoc/>
     public IUsersClient Users { get; }
 
@@ -34,6 +38,7 @@ public class JfwApiClient : IJfwApiClient
 
         DefaultHeaders = CreateDefaultHeaders(brandUrl, authKey);
 
+        IssueCategories = new IssueCategoriesClient(managementConnection, DefaultHeaders);
         Users = new UsersClient(managementConnection, DefaultHeaders);
     }
 

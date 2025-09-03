@@ -1,4 +1,5 @@
 using System.Text;
+using JFW.Sdk.Abstracts;
 using JFW.Sdk.Clients.Abstracts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -49,12 +50,11 @@ public class ManagementConnection : IManagementConnection, IDisposable
     }
 
 
-    internal T? DeserializeContent<T>(string content, JsonConverter[]? converters = null)
+    internal ApiResponse<T>? DeserializeContent<T>(string content, JsonConverter[]? converters = null)
     {
-        var apiResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(content,
+        return JsonConvert.DeserializeObject<ApiResponse<T>>(content,
             converters == null ? jsonSerializerSettings : new JsonSerializerSettings() { Converters = converters });
 
-        return apiResponse != null ? apiResponse.Data : default;
     }
 
     private static HttpContent? CreateContent<T>(T? body, string contentType)
@@ -85,7 +85,9 @@ public class ManagementConnection : IManagementConnection, IDisposable
         TRequest? body = default,
         string contentType = ApplicationJsonContentType,
         IDictionary<string, string>? headers = null,
-        JsonConverter[]? converters = null)
+        JsonConverter[]? converters = null,
+        CancellationToken cancellationToken = default
+    )
     {
 
         var finalUrl = BuildUrl(url);
@@ -110,7 +112,7 @@ public class ManagementConnection : IManagementConnection, IDisposable
             }
         }
 
-        using var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request, cancellationToken);
 
         //response.EnsureSuccessStatusCode();
 
@@ -121,28 +123,35 @@ public class ManagementConnection : IManagementConnection, IDisposable
             return (TResponse)(object)content;
         }
 
-        return DeserializeContent<TResponse>(content, converters);
+        var apiResponse = DeserializeContent<TResponse>(content, converters);
+
+        if (apiResponse == null)
+            return default;
+
+        if (apiResponse.Success)
+            return apiResponse.Data;
+        throw JfwException.Create(apiResponse.Errors);
     }
 
     /// <inheritdoc/>
-    public Task<T?> GetAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null)
-        => SendAsync<object?, T>(HttpMethod.Get, url, null, ApplicationJsonContentType, headers, converters);
+    public Task<T?> GetAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+        => SendAsync<object?, T>(HttpMethod.Get, url, null, ApplicationJsonContentType, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T?> PostAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null)
-        => SendAsync<object?, T>(HttpMethod.Post, url, body, contentType, headers, converters);
+    public Task<T?> PostAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+        => SendAsync<object?, T>(HttpMethod.Post, url, body, contentType, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T?> PutAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null)
-        => SendAsync<object?, T>(HttpMethod.Put, url, body, contentType, headers, converters);
+    public Task<T?> PutAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+        => SendAsync<object?, T>(HttpMethod.Put, url, body, contentType, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T?> PatchAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null)
-        => SendAsync<object?, T>(HttpMethod.Patch, url, body, contentType, headers, converters);
+    public Task<T?> PatchAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+        => SendAsync<object?, T>(HttpMethod.Patch, url, body, contentType, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T?> DeleteAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null)
-        => SendAsync<object?, T>(HttpMethod.Delete, url, null, ApplicationJsonContentType, headers, converters);
+    public Task<T?> DeleteAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+        => SendAsync<object?, T>(HttpMethod.Delete, url, null, ApplicationJsonContentType, headers, converters, cancellationToken);
 
 
     /// <summary>

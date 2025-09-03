@@ -9,6 +9,11 @@ namespace JFW.Sdk;
 public interface IJfwApiClient
 {
     /// <summary>
+    /// Contains all the methods to call the api/v1/issue-categories endpoints.
+    /// </summary>
+    IIssueCategoriesClient IssueCategories { get; }
+
+    /// <summary>
     /// Contains all the methods to call the api/v1/users endpoints.
     /// </summary>
     IUsersClient Users { get; }

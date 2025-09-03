@@ -1,4 +1,5 @@
 
+using JFW.Sdk.Abstracts;
 using JFW.Sdk.Models;
 
 namespace JFW.Sdk.Clients.Interfaces;
@@ -45,4 +46,22 @@ public interface IUsersClient
     /// <param name="id">The unique identifier of the user.</param>
     /// <returns></returns>
     Task<User?> GetByIdAsync(string id);
+
+    /// <summary>
+    /// Gets the user information for the given username.
+    /// </summary>
+    /// <remarks>
+    /// This method retrieves a user by the given username.
+    /// API Endpoint: GET api/v1/users/by-username/{username}
+    /// </remarks>
+    /// <param name="username">The username of the user to get.</param>
+    /// <returns></returns>
+    Task<User?> GetByUsernameAsync(string username);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    Task<PaginationList<User>?> GetAllAsync(GetUsersRequest request);
 }

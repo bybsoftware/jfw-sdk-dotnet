@@ -1,6 +1,7 @@
 
-using JFW.Sdk;
+using JFW.Sdk.Abstracts;
 using JFW.Sdk.Clients.Interfaces;
+using JFW.Sdk.Helpers;
 using JFW.Sdk.Models;
 
 namespace JFW.Sdk.Clients.Implements;
@@ -35,13 +36,13 @@ public class UsersClient : IUsersClient
     /// <inheritdoc/>
     public Task<User?> CreateByEmailAsync(UserCreateByEmailRequest request)
     {
-        return Connection.PostAsync<User>("api/v1/users/register/email-address", request, DefaultHeaders);
+        return Connection.PostAsync<User>(UrlHelper.BuildUriRelative(BaseUri, "register/email-address"), request, DefaultHeaders);
     }
 
     /// <inheritdoc/>
     public Task<User?> CreateByPhoneAsync(UserCreateByPhoneRequest request)
     {
-        return Connection.PostAsync<User>("api/v1/users/register/phone-number", request, DefaultHeaders);
+        return Connection.PostAsync<User>(UrlHelper.BuildUriRelative(BaseUri, "register/phone-number"), request, DefaultHeaders);
     }
 
     /// <inheritdoc/>
@@ -50,6 +51,26 @@ public class UsersClient : IUsersClient
         if (string.IsNullOrWhiteSpace(id))
             throw new ArgumentException("Id cannot be null or empty.", nameof(id));
 
-        return Connection.GetAsync<User>($"api/v1/users/{id}", DefaultHeaders);
+        return Connection.GetAsync<User>(UrlHelper.BuildUriRelative(BaseUri, id), DefaultHeaders);
     }
+
+    /// <inheritdoc/>
+    public Task<User?> GetByUsernameAsync(string username)
+    {
+        if (string.IsNullOrWhiteSpace(username))
+            throw new ArgumentException("Username cannot be null or empty.", nameof(username));
+
+        return Connection.GetAsync<User>(UrlHelper.BuildUriRelative(BaseUri, $"by-username/{username}"), DefaultHeaders);
+    }
+
+    /// <inheritdoc/>
+    public Task<PaginationList<User>?> GetAllAsync(GetUsersRequest request)
+    {
+        IDictionary<string, string> queryParams = request.ToDictionary();
+
+        string? queryString = UrlHelper.AddQueryString(queryParams);
+
+        return Connection.GetAsync<PaginationList<User>>(UrlHelper.BuildUriQuery(BaseUri, queryString), DefaultHeaders);
+    }
+
 }

@@ -22,6 +22,10 @@ namespace JFW.Sdk.Abstracts
 
         private string AuthKey { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="httpClient"></param>
         public BaseJFWClient(HttpClient httpClient)
         {
             httpClient.BaseAddress = new(HostUrl.Host);
