@@ -1,5 +1,5 @@
 
-using JFW.Sdk.Abstracts;
+using JFW.Sdk.Clients.Abstracts;
 using JFW.Sdk.Clients.Interfaces;
 using JFW.Sdk.Helpers;
 using JFW.Sdk.Models;
@@ -7,29 +7,19 @@ using JFW.Sdk.Models;
 namespace JFW.Sdk.Clients.Implements;
 
 /// <summary>
-/// This class provides all methods to call the api/v1/users endpoints.
+/// This class provides all methods to call the api/v1/issue-categories endpoints.
 /// </summary>
-public class IssueCategoriesClient : IIssueCategoriesClient
+public class IssueCategoriesClient : BaseClient, IIssueCategoriesClient
 {
-    private readonly IManagementConnection Connection;
+    /// <inheritdoc/>
+    protected override string BaseUriClient => "api/v1/issue-categories";
 
     /// <summary>
-    /// <see cref="Uri"/> of the endpoint to use in making API calls.
-    /// </summary>
-    protected Uri BaseUri { get; } = new Uri("api/v1/issue-categories", UriKind.Relative);
-
-    /// <summary>
-    /// Default headers included with every request this client makes.
-    /// </summary>
-    protected IDictionary<string, string> DefaultHeaders { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UsersClient"/> class.
+    /// Initializes a new instance of the <see cref="IssueCategoriesClient"/> class.
     /// </summary>
     public IssueCategoriesClient(IManagementConnection managementConnection, IDictionary<string, string> defaultHeaders)
+        : base(managementConnection, defaultHeaders)
     {
-        Connection = managementConnection ?? throw new ArgumentNullException(nameof(managementConnection));
-        DefaultHeaders = defaultHeaders ?? throw new ArgumentNullException(nameof(defaultHeaders));
     }
 
     /// <inheritdoc/>
