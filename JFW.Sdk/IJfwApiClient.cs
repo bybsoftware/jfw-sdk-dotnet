@@ -14,10 +14,14 @@ public interface IJfwApiClient
     IIssueCategoriesClient IssueCategories { get; }
 
     /// <summary>
+    /// Contains all the methods to call the api/v1/features endpoints.
+    /// </summary>
+    IFeaturesClient Features { get; }
+
+    /// <summary>
     /// Contains all the methods to call the api/v1/users endpoints.
     /// </summary>
     IUsersClient Users { get; }
-
 
 
     /// <summary>

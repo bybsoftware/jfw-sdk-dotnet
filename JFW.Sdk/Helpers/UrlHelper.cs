@@ -27,14 +27,41 @@ public static class UrlHelper
     /// 
     /// </summary>
     /// <param name="baseUri"></param>
-    /// <param name="relative"></param>
+    /// <param name="queryStrings"></param>
     /// <returns></returns>
-    public static string BuildUriRelative(Uri baseUri, string? relative = null)
+    public static string BuildUriQuery(Uri baseUri, IDictionary<string, string> queryStrings)
     {
-        if (string.IsNullOrEmpty(relative))
+        string? queryString = AddQueryString(queryStrings);
+
+        return BuildUriQuery(baseUri, queryString);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="baseUri"></param>
+    /// <param name="relativePath"></param>
+    /// <returns></returns>
+    public static string BuildUriRelative(Uri baseUri, string? relativePath = null)
+    {
+        if (string.IsNullOrEmpty(relativePath))
             return baseUri.ToString();
         else
-            return $"{baseUri}/{relative}";
+            return $"{baseUri}/{relativePath}";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="baseUri"></param>
+    /// <param name="relativePath"></param>
+    /// <param name="queryStrings"></param>
+    /// <returns></returns>
+    public static string BuildUri(Uri baseUri, string relativePath, IDictionary<string, string> queryStrings)
+    {
+        string uri = BuildUriRelative(baseUri, relativePath);
+
+        return BuildUriQuery(new Uri(uri, UriKind.Relative), queryStrings);
     }
 
     /// <summary>
