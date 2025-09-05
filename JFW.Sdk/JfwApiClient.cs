@@ -2,6 +2,7 @@
 using JFW.Sdk.Clients.Implements;
 using JFW.Sdk.Clients.Interfaces;
 using JFW.Sdk.Constants;
+using JFW.Sdk.Models;
 
 namespace JFW.Sdk;
 
@@ -16,6 +17,9 @@ public class JfwApiClient : IJfwApiClient
 
     /// <inheritdoc/>
     public IFeaturesClient Features { get; }
+
+    /// <inheritdoc/>
+    public IRolesClient Roles { get; }
 
     /// <inheritdoc/>
     public IUsersClient Users { get; }
@@ -43,6 +47,7 @@ public class JfwApiClient : IJfwApiClient
 
         IssueCategories = new IssueCategoriesClient(managementConnection, DefaultHeaders);
         Features = new FeaturesClient(managementConnection, DefaultHeaders);
+        Roles = new RolesClient(managementConnection, DefaultHeaders);
         Users = new UsersClient(managementConnection, DefaultHeaders);
     }
 

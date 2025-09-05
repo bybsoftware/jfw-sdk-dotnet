@@ -19,6 +19,12 @@ public interface IJfwApiClient
     IFeaturesClient Features { get; }
 
     /// <summary>
+    /// Contains all the methods to call the api/v1/roles endpoints.
+    /// </summary>
+    IRolesClient Roles { get; }
+
+
+    /// <summary>
     /// Contains all the methods to call the api/v1/users endpoints.
     /// </summary>
     IUsersClient Users { get; }
