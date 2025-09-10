@@ -13,6 +13,9 @@ public class JfwApiClient : IJfwApiClient
 {
 
     /// <inheritdoc/>
+    public IEventsClient Events { get; }
+
+    /// <inheritdoc/>
     public IIssueCategoriesClient IssueCategories { get; }
 
     /// <inheritdoc/>
@@ -45,6 +48,7 @@ public class JfwApiClient : IJfwApiClient
 
         DefaultHeaders = CreateDefaultHeaders(brandUrl, authKey);
 
+        Events = new EventsClient(managementConnection, DefaultHeaders);
         IssueCategories = new IssueCategoriesClient(managementConnection, DefaultHeaders);
         Features = new FeaturesClient(managementConnection, DefaultHeaders);
         Roles = new RolesClient(managementConnection, DefaultHeaders);

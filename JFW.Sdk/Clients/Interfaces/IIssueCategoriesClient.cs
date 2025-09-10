@@ -1,7 +1,4 @@
 
-using JFW.Sdk.Abstracts;
-using JFW.Sdk.Models;
-
 namespace JFW.Sdk.Clients.Interfaces;
 
 /// <summary>

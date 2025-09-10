@@ -1,7 +1,4 @@
 
-using JFW.Sdk.Clients.Abstracts;
-using JFW.Sdk.Constants;
-
 namespace JFW.Sdk.Models;
 
 /// <summary>

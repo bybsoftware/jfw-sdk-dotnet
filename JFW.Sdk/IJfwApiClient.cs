@@ -8,6 +8,12 @@ namespace JFW.Sdk;
 /// </summary>
 public interface IJfwApiClient
 {
+
+    /// <summary>
+    /// Contains all the methods to call the api/v1/events endpoints.
+    /// </summary>
+    IEventsClient Events { get; }
+
     /// <summary>
     /// Contains all the methods to call the api/v1/issue-categories endpoints.
     /// </summary>

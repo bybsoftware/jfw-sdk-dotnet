@@ -1,4 +1,3 @@
-using System;
 
 namespace JFW.Sdk.Models.Options
 {

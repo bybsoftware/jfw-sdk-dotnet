@@ -5,7 +5,6 @@
 * - 2024-08-31: Created - Steve Bang.
 */
 
-using System;
 
 namespace JFW.Sdk.Models.Responses
 {
