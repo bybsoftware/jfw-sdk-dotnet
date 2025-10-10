@@ -71,6 +71,19 @@ public partial class JfwApiClient : IJfwApiClient
         }
 
         /// <summary>
+        /// Sets the management connection by the given custom domain.
+        /// </summary>
+        public Builder WithCustomDomain(string customDomain)
+        {
+            var httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri(customDomain);
+
+            var connection = new ManagementConnection(httpClient);
+            _managementConnection = connection;
+            return this;
+        }
+
+        /// <summary>
         /// Adds a custom header to the client.
         /// </summary>
         public Builder WithHeader(string key, string value)
@@ -102,7 +115,13 @@ public partial class JfwApiClient : IJfwApiClient
         public JfwApiClient Build()
         {
             if (_managementConnection == null)
-                throw new InvalidOperationException("ManagementConnection is required. Use WithManagementConnection() to set it.");
+            {
+                var httpClient = new HttpClient();
+                httpClient.BaseAddress = new Uri(HostUrl.DefaultHost);
+
+                var connection = new ManagementConnection(httpClient);
+                _managementConnection = connection;
+            }
 
             var headers = new Dictionary<string, string>();
 
