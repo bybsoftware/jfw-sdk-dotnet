@@ -1,4 +1,4 @@
-name: Build, Test, and Publish to NuGet for package Jfw.SDK
+name: Build, Test, and Publish to NuGet for package Jfw.Sdk
 
 on:
   push:
@@ -33,5 +33,4 @@ jobs:
         run: dotnet pack JFW.Sdk/JFW.Sdk.csproj --configuration Release --no-build -o ./artifacts
 
       - name: Publish to NuGet
-        if: github.event_name == 'release'
         run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
