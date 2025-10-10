@@ -5,6 +5,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>JFW.Sdk</PackageId>
+    <Authors>1Byte Software Pte., Ltd</Authors>
+    <Company>1Byte Software Pte., Ltd</Company>
+    <AssemblyTitle>Official .NET SDK for the Jframework API</AssemblyTitle>
+    <Description>Official .NET SDK for the Jframework API</Description>
+    <Copyright>Copyright © 2021 - $([System.DateTime]::UtcNow.Year) Jframework</Copyright>
+    <RootNamespace>JFW.Sdk</RootNamespace>
+    <Version>1.0.0</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/1Byte-Software/jfw-sdk-dotnet.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
