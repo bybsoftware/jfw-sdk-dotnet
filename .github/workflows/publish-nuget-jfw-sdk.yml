@@ -1,0 +1,37 @@
+name: Build, Test, and Publish to NuGet for package Jfw.SDK
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore src/JFW.Sdk/JFW.Sdk.csproj
+
+      - name: Build project
+        run: dotnet build JFW.Sdk/JFW.Sdk.csproj --configuration Release --no-restore
+
+      ##- name: Run tests
+      ##  run: dotnet test JFW.Sdk.Tests/JFW.Sdk.Tests.csproj --no-build --verbosity normal
+
+      - name: Pack NuGet package
+        run: dotnet pack JFW.Sdk/JFW.Sdk.csproj --configuration Release --no-build -o ./artifacts
+
+      - name: Publish to NuGet
+        if: github.event_name == 'release'
+        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
