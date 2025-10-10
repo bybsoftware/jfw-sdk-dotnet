@@ -28,7 +28,7 @@ namespace JFW.Sdk.Abstracts
         /// <param name="httpClient"></param>
         public BaseJFWClient(HttpClient httpClient)
         {
-            httpClient.BaseAddress = new(HostUrl.Host);
+            httpClient.BaseAddress = new(HostUrl.DefaultHost);
             _httpClient = httpClient;
         }
 
