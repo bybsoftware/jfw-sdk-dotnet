@@ -1,7 +1,7 @@
 name: Build, Test, and Publish to NuGet for package Jfw.SDK
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
   release:
     types: [ published ]
@@ -21,7 +21,7 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: Restore dependencies
-        run: dotnet restore src/JFW.Sdk/JFW.Sdk.csproj
+        run: dotnet restore JFW.Sdk/JFW.Sdk.csproj
 
       - name: Build project
         run: dotnet build JFW.Sdk/JFW.Sdk.csproj --configuration Release --no-restore
