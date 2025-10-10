@@ -1,0 +1,53 @@
+
+using JFW.Sdk.Clients.Interfaces;
+
+namespace JFW.Sdk;
+
+/// <summary>
+/// The main interface for interacting with the JFW API.
+/// </summary>
+public interface IJfwApiClient
+{
+    /// <summary>
+    /// Contains all the methods to call the api/v1/cdn endpoints.
+    /// </summary>
+    ICdnClient Cdn { get; }
+
+    /// <summary>
+    /// Contains all the methods to call the api/v1/events endpoints.
+    /// </summary>
+    IEventsClient Events { get; }
+
+    /// <summary>
+    /// Contains all the methods to call the api/v1/issue-categories endpoints.
+    /// </summary>
+    IIssueCategoriesClient IssueCategories { get; }
+
+    /// <summary>
+    /// Contains all the methods to call the api/v1/features endpoints.
+    /// </summary>
+    IFeaturesClient Features { get; }
+
+    /// <summary>
+    /// Contains all the methods to call the api/v1/roles endpoints.
+    /// </summary>
+    IRolesClient Roles { get; }
+
+
+    /// <summary>
+    /// Contains all the methods to call the api/v1/users endpoints.
+    /// </summary>
+    IUsersClient Users { get; }
+
+
+    /// <summary>
+    /// Add or update a default header to be included with every request this client makes.
+    /// </summary>
+    void AddOrUpdateDefaultHeader(string key, string value);
+
+    /// <summary>
+    /// Update the auth key used in the Authorization header for all requests.
+    /// </summary>
+    /// <param name="authKey"></param>
+    void UpdateAuthKey(string authKey);
+}

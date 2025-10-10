@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JFW.Sdk", "JFW.Sdk\JFW.Sdk.csproj", "{FE200951-6AAD-46C9-8B07-1B7434F79DCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JFW.Sdk.Tests", "JFW.Sdk.Tests\JFW.Sdk.Tests.csproj", "{FE6EB11F-DC22-4A6B-AC71-6C0CC3E97777}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE200951-6AAD-46C9-8B07-1B7434F79DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE200951-6AAD-46C9-8B07-1B7434F79DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE200951-6AAD-46C9-8B07-1B7434F79DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE200951-6AAD-46C9-8B07-1B7434F79DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE6EB11F-DC22-4A6B-AC71-6C0CC3E97777}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE6EB11F-DC22-4A6B-AC71-6C0CC3E97777}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE6EB11F-DC22-4A6B-AC71-6C0CC3E97777}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE6EB11F-DC22-4A6B-AC71-6C0CC3E97777}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {414570F5-6D96-41AB-AFE3-860D134DCBE1}
+	EndGlobalSection
+EndGlobal
