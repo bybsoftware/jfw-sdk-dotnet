@@ -1,16 +1,16 @@
 
 using JFW.Sdk.Clients.Implements;
 using JFW.Sdk.Clients.Interfaces;
-using JFW.Sdk.Constants;
-using JFW.Sdk.Models;
 
 namespace JFW.Sdk;
 
 /// <summary>
 /// Represents the JFW API client.
 /// </summary>
-public class JfwApiClient : IJfwApiClient
+public partial class JfwApiClient : IJfwApiClient
 {
+    /// <inheritdoc/>
+    public ICdnClient Cdn { get; }
 
     /// <inheritdoc/>
     public IEventsClient Events { get; }
@@ -42,12 +42,22 @@ public class JfwApiClient : IJfwApiClient
     /// <exception cref="ArgumentException">brandUrl cannot be null or empty. - brandUrl</exception>
     /// <exception cref="ArgumentNullException">managementConnection</exception>
     public JfwApiClient(string brandUrl, string authKey, IManagementConnection managementConnection)
+        : this(CreateDefaultHeaders(brandUrl, authKey), managementConnection)
     {
         if (string.IsNullOrWhiteSpace(brandUrl))
             throw new ArgumentException("BrandUrl cannot be null or empty.", nameof(brandUrl));
+    }
 
-        DefaultHeaders = CreateDefaultHeaders(brandUrl, authKey);
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JfwApiClient"/> class.
+    /// </summary>
+    /// <param name="headerRequest">The default header request</param>
+    /// <param name="managementConnection">The management connection.</param>
+    public JfwApiClient(Dictionary<string, string> headerRequest, IManagementConnection managementConnection)
+    {
+        DefaultHeaders = headerRequest;
 
+        Cdn = new CdnClient(managementConnection, DefaultHeaders);
         Events = new EventsClient(managementConnection, DefaultHeaders);
         IssueCategories = new IssueCategoriesClient(managementConnection, DefaultHeaders);
         Features = new FeaturesClient(managementConnection, DefaultHeaders);
@@ -80,6 +90,20 @@ public class JfwApiClient : IJfwApiClient
 
         if (!string.IsNullOrEmpty(brandUrl))
             headers.Add(HeaderKeys.BrandUrl, brandUrl);
+
+        return headers;
+    }
+
+    /// <summary>
+    /// Creates the default headers.
+    /// </summary>
+    /// <param name="apikey">The api key value.</param>
+    /// <returns>The default headers.</returns>
+    private static Dictionary<string, string> CreateDefaultHeaders(string apikey)
+    {
+        var headers = new Dictionary<string, string>();
+        if (!string.IsNullOrEmpty(apikey))
+            headers.Add(HeaderKeys.ApiKey, apikey);
 
         return headers;
     }

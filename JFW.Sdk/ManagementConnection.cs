@@ -20,10 +20,6 @@ public class ManagementConnection : IManagementConnection, IDisposable
     /// </summary>
     public string BaseUrl { get; }
 
-    /// <summary>
-    /// The content type for JSON requests.
-    /// </summary>
-    public const string ApplicationJsonContentType = "application/json";
 
     // private readonly int MAX_REQUEST_RETRY_JITTER = 250;
     // private readonly int MAX_REQUEST_RETRY_DELAY = 1000;
@@ -59,14 +55,35 @@ public class ManagementConnection : IManagementConnection, IDisposable
 
     private static HttpContent? CreateContent<T>(T? body, string contentType)
     {
-        if (body == null) return null;
+        if (body == null)
+            return null;
 
         return contentType switch
         {
-            ApplicationJsonContentType => new StringContent(JsonConvert.SerializeObject(body, jsonSerializerSettings), Encoding.UTF8, ApplicationJsonContentType),
-            "application/x-www-form-urlencoded" when body is IDictionary<string, object> dict =>
-                new FormUrlEncodedContent(dict.Select(p => new KeyValuePair<string, string>(p.Key, p.Value?.ToString() ?? ""))),
-            _ => throw new NotSupportedException($"Content type {contentType} not supported")
+            MimeTypes.ApplicationJson => new StringContent(
+                JsonConvert.SerializeObject(body, jsonSerializerSettings),
+                Encoding.UTF8,
+                MimeTypes.ApplicationJson
+            ),
+
+            MimeTypes.ApplicationFormUrlEncoded when body is IDictionary<string, object> dict =>
+                new FormUrlEncodedContent(
+                    dict.Select(p => new KeyValuePair<string, string>(
+                        p.Key,
+                        p.Value?.ToString() ?? string.Empty
+                    ))
+                ),
+
+            MimeTypes.MultipartFormData when body is MultipartFormDataContent multipartData =>
+                CreateMultipartContent(multipartData),
+
+            MimeTypes.MultipartFormData =>
+                throw new ArgumentException(
+                    $"Body must be of type {nameof(MultipartFormDataContent)} when using {MimeTypes.MultipartFormData}",
+                    nameof(body)
+                ),
+
+            _ => throw new NotSupportedException($"Content type '{contentType}' is not supported.")
         };
     }
 
@@ -78,12 +95,38 @@ public class ManagementConnection : IManagementConnection, IDisposable
         return $"{BaseUrl}/{url.TrimStart('/')}";
     }
 
+    /// <summary>
+    /// Creates a MultipartFormDataContent from the provided data.
+    /// </summary>
+    /// <param name="data">The multipart form data content.</param>
+    /// <returns>An HttpContent instance containing the multipart form data.</returns>
+    private static HttpContent CreateMultipartContent(MultipartFormDataContent data)
+    {
+        var content = new System.Net.Http.MultipartFormDataContent();
+
+        // Add text fields
+        foreach (var field in data.Fields)
+        {
+            content.Add(new StringContent(field.Value ?? string.Empty), field.Key);
+        }
+
+        // Add files
+        foreach (var file in data.Files)
+        {
+            var fileContent = new ByteArrayContent(file.Value.Content);
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.Value.ContentType);
+            content.Add(fileContent, file.Key, file.Value.FileName);
+        }
+
+        return content;
+    }
+
     /// <inheritdoc/>
     public async Task<TResponse?> SendAsync<TRequest, TResponse>(
         HttpMethod method,
         string url,
         TRequest? body = default,
-        string contentType = ApplicationJsonContentType,
+        string contentType = MimeTypes.ApplicationJson,
         IDictionary<string, string>? headers = null,
         JsonConverter[]? converters = null,
         CancellationToken cancellationToken = default
@@ -135,23 +178,23 @@ public class ManagementConnection : IManagementConnection, IDisposable
 
     /// <inheritdoc/>
     public Task<T?> GetAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
-        => SendAsync<object?, T>(HttpMethod.Get, url, null, ApplicationJsonContentType, headers, converters, cancellationToken);
+        => SendAsync<object?, T>(HttpMethod.Get, url, null, MimeTypes.ApplicationJson, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T?> PostAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+    public Task<T?> PostAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = MimeTypes.ApplicationJson, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
         => SendAsync<object?, T>(HttpMethod.Post, url, body, contentType, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T?> PutAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+    public Task<T?> PutAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = MimeTypes.ApplicationJson, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
         => SendAsync<object?, T>(HttpMethod.Put, url, body, contentType, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<T?> PatchAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = ApplicationJsonContentType, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
+    public Task<T?> PatchAsync<T>(string url, object? body, IDictionary<string, string>? headers = null, string contentType = MimeTypes.ApplicationJson, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
         => SendAsync<object?, T>(HttpMethod.Patch, url, body, contentType, headers, converters, cancellationToken);
 
     /// <inheritdoc/>
     public Task<T?> DeleteAsync<T>(string url, IDictionary<string, string>? headers = null, JsonConverter[]? converters = null, CancellationToken cancellationToken = default)
-        => SendAsync<object?, T>(HttpMethod.Delete, url, null, ApplicationJsonContentType, headers, converters, cancellationToken);
+        => SendAsync<object?, T>(HttpMethod.Delete, url, null, MimeTypes.ApplicationJson, headers, converters, cancellationToken);
 
 
     /// <summary>
@@ -172,5 +215,105 @@ public class ManagementConnection : IManagementConnection, IDisposable
     public void Dispose()
     {
         Dispose(true);
+    }
+}
+
+
+/// <summary>
+/// Represents a file to be uploaded in a multipart/form-data request.
+/// </summary>
+public class FileContent
+{
+    /// <summary>
+    /// Gets or sets the file name.
+    /// </summary>
+    public string FileName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the file content as a byte array.
+    /// </summary>
+    public byte[] Content { get; set; }
+
+    /// <summary>
+    /// Gets or sets the content type (MIME type) of the file.
+    /// </summary>
+    public string ContentType { get; set; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileContent"/> class.
+    /// </summary>
+    /// <param name="fileName">The name of the file.</param>
+    /// <param name="content">The file content as bytes.</param>
+    /// <param name="contentType">The MIME type of the file. Defaults to application/octet-stream.</param>
+    public FileContent(string fileName, byte[] content, string contentType = MimeTypes.ApplicationOctetStream)
+    {
+        FileName = fileName;
+        Content = content;
+        ContentType = contentType;
+    }
+
+    /// <summary>
+    /// Creates a FileContent from a file path.
+    /// </summary>
+    /// <param name="filePath">The path to the file.</param>
+    /// <returns>A new FileContent instance.</returns>
+    public static FileContent FromFile(string filePath)
+    {
+        var fileName = Path.GetFileName(filePath);
+        var content = File.ReadAllBytes(filePath);
+        var contentType = MimeTypes.GetMimeTypeByFilename(fileName);
+        return new FileContent(fileName, content, contentType);
+    }
+
+    /// <summary>
+    /// Creates a FileContent from a stream.
+    /// </summary>
+    /// <param name="fileName">The name of the file.</param>
+    /// <param name="stream">The stream containing the file data.</param>
+    /// <param name="contentType">The MIME type of the file.</param>
+    /// <returns>A new FileContent instance.</returns>
+    public static FileContent FromStream(string fileName, Stream stream, string? contentType = null)
+    {
+        using var memoryStream = new MemoryStream();
+        stream.CopyTo(memoryStream);
+        var content = memoryStream.ToArray();
+        contentType ??= MimeTypes.GetMimeTypeByFilename(fileName);
+        return new FileContent(fileName, content, contentType);
+    }
+}
+
+/// <summary>
+/// Represents the body content for a multipart/form-data request.
+/// </summary>
+public class MultipartFormDataContent
+{
+    /// <summary>
+    /// Gets or sets the form fields as key-value pairs.
+    /// </summary>
+    public IDictionary<string, string> Fields { get; set; } = new Dictionary<string, string>();
+
+    /// <summary>
+    /// Gets or sets the files to be uploaded.
+    /// </summary>
+    public IDictionary<string, FileContent> Files { get; set; } = new Dictionary<string, FileContent>();
+
+    /// <summary>
+    /// Adds a text field to the form data.
+    /// </summary>
+    /// <param name="name">The field name.</param>
+    /// <param name="value">The field value.</param>
+    public void AddField(string name, string value)
+    {
+        Fields[name] = value;
+    }
+
+    /// <summary>
+    /// Adds a file to the form data.
+    /// </summary>
+    /// <param name="name">The field name for the file.</param>
+    /// <param name="file">The file content.</param>
+    public void AddFile(string name, FileContent file)
+    {
+        Files[name] = file;
     }
 }

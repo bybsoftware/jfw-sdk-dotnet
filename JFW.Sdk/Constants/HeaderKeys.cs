@@ -17,4 +17,14 @@ public class HeaderKeys
     /// </summary>
     public const string BrandUrl = "Brand-Url";
 
+    /// <summary>
+    /// Api Key header
+    /// </summary>
+    public const string ApiKey = "X-Api-Key";
+
+    /// <summary>
+    /// Authorization header key.
+    /// </summary>
+    public const string Authorization = "Authorization";
+
 }
