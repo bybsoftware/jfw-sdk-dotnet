@@ -6,7 +6,7 @@ using JFW.Sdk.Helpers;
 namespace JFW.Sdk.Clients.Implements;
 
 /// <summary>
-/// This class provides all methods to call the api/v1/events endpoints.
+/// This class provides all methods to call the api/v1/cdn endpoints.
 /// </summary>
 public class CdnClient : BaseClient, ICdnClient
 {
@@ -15,7 +15,7 @@ public class CdnClient : BaseClient, ICdnClient
 
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="EventsClient"/> class.
+    /// Initializes a new instance of the <see cref="CdnClient"/> class.
     /// </summary>
     public CdnClient(IManagementConnection managementConnection, IDictionary<string, string> defaultHeaders)
         : base(managementConnection, defaultHeaders)
@@ -24,11 +24,16 @@ public class CdnClient : BaseClient, ICdnClient
 
     /// <inheritdoc/>
     public Task<Cdn?> UploadAsync(CdnUploadRequest uploadRequest)
-        => Connection.PostAsync<Cdn?>(
+    {
+        if (uploadRequest is null) throw new ArgumentNullException(nameof(uploadRequest));
+
+        return Connection.PostAsync<Cdn?>(
             UrlHelper.BuildUriRelative(BaseUri, "upload-file"),
             uploadRequest.ToMultipartFormData(),
             DefaultHeaders,
             MimeTypes.MultipartFormData
         );
+    }
+
 
 }

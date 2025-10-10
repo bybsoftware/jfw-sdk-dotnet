@@ -36,8 +36,8 @@ public class EventsTest
         var result = await _apiClients.Events.GetByIdAsync(eventId);
 
         // Assert
+         Assert.NotNull(result);
         Assert.IsType<Event>(result);
-        Assert.NotNull(result);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public class EventsTest
         );
 
         // Assert
-        Assert.IsType<PaginationList<Event>>(result);
         Assert.NotNull(result);
+        Assert.IsType<PaginationList<Event>>(result);
     }
 }

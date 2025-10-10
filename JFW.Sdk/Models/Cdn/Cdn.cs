@@ -1,7 +1,7 @@
 namespace JFW.Sdk.Models;
 
 /// <summary>
-/// The event model.
+/// The cdn model.
 /// </summary>
 public class Cdn : BaseModel
 {

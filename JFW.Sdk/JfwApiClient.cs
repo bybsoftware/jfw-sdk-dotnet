@@ -55,6 +55,11 @@ public partial class JfwApiClient : IJfwApiClient
     /// <param name="managementConnection">The management connection.</param>
     public JfwApiClient(Dictionary<string, string> headerRequest, IManagementConnection managementConnection)
     {
+        if (headerRequest is null)
+            throw new ArgumentNullException(nameof(headerRequest));
+        if (managementConnection is null)
+            throw new ArgumentNullException(nameof(managementConnection));
+
         DefaultHeaders = headerRequest;
 
         Cdn = new CdnClient(managementConnection, DefaultHeaders);
