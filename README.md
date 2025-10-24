@@ -10,7 +10,7 @@ The SDK is compatible with:
 
 ### Install using Nuget Package Manager
 1. Right-click on your project in the Solution Explorer and choose Manage Nuget Packages...
-2. Search for Okta. Install the `Jfw.Sdk` package.
+2. Search for Jframework. Install the `Jfw.Sdk` package.
 
 
 ## Usage guide
