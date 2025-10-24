@@ -20,6 +20,9 @@ public partial class JfwApiClient : IJfwApiClient
 
     /// <inheritdoc/>
     public IFeaturesClient Features { get; }
+    
+    /// <inheritdoc/>
+    public IQuotaUsagesClient QuotaUsages { get; }
 
     /// <inheritdoc/>
     public IRolesClient Roles { get; }
@@ -66,6 +69,7 @@ public partial class JfwApiClient : IJfwApiClient
         Events = new EventsClient(managementConnection, DefaultHeaders);
         IssueCategories = new IssueCategoriesClient(managementConnection, DefaultHeaders);
         Features = new FeaturesClient(managementConnection, DefaultHeaders);
+        QuotaUsages = new QuotaUsagesClient(managementConnection, DefaultHeaders);
         Roles = new RolesClient(managementConnection, DefaultHeaders);
         Users = new UsersClient(managementConnection, DefaultHeaders);
     }
